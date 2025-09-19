@@ -1,0 +1,17 @@
+kind: Service 
+apiVersion: v1 
+metadata:
+  name: nodejs-service
+  namespace: nodejs-image-app
+spec:
+  selector:
+    app: nodejs 
+    env: test
+    tier: frontend 
+  type: NodePort 
+  ports:
+    - protocol: TCP 
+      port: 3000
+      targetPort: 3000
+      nodePort: 30999  # Nodes external Port
+  
