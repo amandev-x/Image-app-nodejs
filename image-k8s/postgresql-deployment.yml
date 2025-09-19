@@ -1,0 +1,64 @@
+kind: Deployment 
+apiVersion: apps/v1
+metadata: 
+  name: postgresql-deployment 
+  namespace: nodejs-image-app 
+  labels:
+    app: postgresql 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql 
+      env: test 
+      tier: backend
+  template:
+    metadata:
+      name: postgresql-pod 
+      labels: 
+        app: postgresql 
+        env: test 
+        tier: backend 
+    spec:
+      containers:
+        - name: postgresql-container 
+          image: postgres:alpine 
+          ports: 
+            - containerPort: 5432
+          env: 
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresql-init-configmap
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresql-init-configmap
+                  key: pass
+            - name: POSTGRES_DB 
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresql-init-configmap
+                  key: database
+          volumeMounts:
+            - name: postgres-db-script
+              mountPath: /docker-entrypoint-initdb.d
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data 
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes: 
+        - name: postgres-db-script
+          configMap:
+             name: postgresql-init-configmap 
+        - name: postgres-storage
+          hostPath:
+            path: /opt/data/postgres
+            type: DirectoryOrCreate
+        
