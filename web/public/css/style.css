@@ -1,0 +1,22 @@
+body {
+    background: #ebd36a;
+    color: white;
+}
+
+div.container {
+    background-color: rgb(105, 146, 139);
+    max-width: 800px;
+    margin: 100px auto;
+    border: 20px solid white;
+    padding: 10px;
+    text-align: center;
+}
+
+img {
+    width: 500px;
+}
+
+h4 {
+    text-transform: uppercase;;
+}
+
